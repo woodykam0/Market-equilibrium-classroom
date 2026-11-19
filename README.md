@@ -6,7 +6,7 @@
 
 ```
 market-equilibrium-classroom/
-├── public/index.html   前端（學生端 + 教師控制台）
+├── index.html          前端（學生端 + 教師控制台，單檔）
 ├── server.js           零依賴後端（靜態託管 + 事件儲存 + 即時推送 SSE）
 ├── package.json
 ├── render.yaml         Render 一鍵部署藍圖
@@ -17,10 +17,8 @@ market-equilibrium-classroom/
 
 準備工作：註冊 GitHub 帳號（免費），註冊 [render.com](https://render.com)（免費，可用 GitHub 直接登入）。
 
-1. **上傳程式碼到 GitHub**（本機沒有 git，用網頁上傳即可）
-   - 開啟 github.com → 右上角「+」→ **New repository** → 名稱填 `market-equilibrium-classroom` → Create
-   - 在新倉庫頁面點 **uploading an existing file**，把本資料夾內的 `public` 資料夾、`server.js`、`package.json`、`render.yaml`、`README.md` 全部拖進去 → **Commit changes**
-   - 注意：`data/` 資料夾不要上傳（空資料夾上傳不了，正常）
+1. **程式碼已在 GitHub：** https://github.com/woodykam0/market-equilibrium-classroom （公開倉庫，6 個檔案）
+   - 修改後重新上傳：`git add -A && git commit -m "update" && git push`（或在倉庫頁點 Add file → Upload files 拖放覆蓋）
 2. **Render 部署**
    - render.com 登入 → **New +** → **Blueprint** → 選擇剛才的倉庫 → Render 會讀取 `render.yaml` → **Apply**
    - （或手動：New + → **Web Service** → 選倉庫 → Build Command 留空 → Start Command 填 `node server.js` → Plan 選 **Free**）
