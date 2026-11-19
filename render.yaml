@@ -7,4 +7,4 @@ services:
     startCommand: "node server.js"
     envVars:
       - key: TEACHER_PASSWORD
-        value: "@W423021k"
+        sync: false   # 密碼不寫進版本庫；在 Render 控制台 Environment 分頁設定

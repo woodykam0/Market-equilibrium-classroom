@@ -27,7 +27,8 @@ market-equilibrium-classroom/
    - 甲班：`https://你的網址/?instanceId=01GIA`
    - 乙班：`https://你的網址/?instanceId=01GIB`
    - 不加 `?instanceId=` 則所有人共用一個課室（`default`）
-5. 教師控制台：開啟同一網址 →「教師控制台」→ 密碼 `@W423021k`
+5. 教師控制台：開啟同一網址 →「教師控制台」→ 密碼 `@W423021k`（實際值由 Render 的 Environment 設定決定）。首次部署後請到 Render → market-equilibrium-classroom → Environment → Add Variable 設定 `TEACHER_PASSWORD=@W423021k`，然後 Manual Deploy 一次。
+6. 資料互不干擾的課堂連結（可同時開多個班）：`https://你的網址/?instanceId=01GIA`、`?instanceId=01GIB`。
 
 > **免費方案須知（重要）**
 > - 免費實例 15 分鐘無人訪問會休眠，上課時學生持續使用不會休眠；若課前閒置，第一個打開頁面的人會等待約 30–60 秒喚醒，之後正常。
@@ -58,4 +59,4 @@ node server.js
 
 - 教師密碼只存於伺服器環境變數，頁面原始碼不含密碼；控場指令（開始/結束/重置/撮合結果）必須持有教師密碼才能寫入，學生無法偽造。
 - 學生提交（報名、報價、圖表、答題）匿名寫入，請在課堂上提醒同學勿亂輸入他人姓名。
-- 如需更改教師密碼：部署前在 `server.js` 所在目錄設定環境變數 `TEACHER_PASSWORD=你的新密碼`（Render：Environment → Add Environment Variable）。
+- 如需更改教師密碼：Render → market-equilibrium-classroom → Environment → 修改 `TEACHER_PASSWORD` → Save（會自動重新部署）。版本庫中一律不存密碼；未設定時教師控制功能自動鎖定。

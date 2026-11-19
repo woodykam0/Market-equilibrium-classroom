@@ -14,7 +14,9 @@ const path = require('path');
 const crypto = require('crypto');
 
 const PORT = Number(process.env.PORT) || 3000;
-const TEACHER_PASSWORD = process.env.TEACHER_PASSWORD || '@W423021k';
+// 密碼一律從環境變數讀取，不寫進版本庫。未設定時教師驗證一律失敗（安全鎖定）。
+const TEACHER_PASSWORD = process.env.TEACHER_PASSWORD || '';
+function teacherOk(pw) { return !!TEACHER_PASSWORD && pw === TEACHER_PASSWORD; }
 const DATA_FILE = process.env.DATA_FILE || path.join(__dirname, 'data', 'events.json');
 const PUBLIC_DIR = __dirname; // 扁平佈局：index.html 與 server.js 同目錄，便於網頁拖放上傳
 const MAX_BODY = 64 * 1024;          // 單個請求最大 64KB（遠超課堂資料所需）
@@ -125,7 +127,7 @@ const server = http.createServer(async (req, res) => {
 
     if (pathname === '/api/teacher/verify' && req.method === 'POST') {
       const body = await readBody(req);
-      const ok = !!body && body.password === TEACHER_PASSWORD;
+      const ok = teacherOk(body && body.password);
       return sendJson(res, 200, { ok });
     }
 
@@ -144,7 +146,7 @@ const server = http.createServer(async (req, res) => {
       if (!data || typeof data !== 'object' || Array.isArray(data) || typeof data.eventType !== 'string' || !data.eventType) {
         return sendJson(res, 400, { error: '資料格式錯誤。' });
       }
-      if (PROTECTED.has(data.eventType) && String(req.headers['x-teacher-key'] || '') !== TEACHER_PASSWORD) {
+      if (PROTECTED.has(data.eventType) && !teacherOk(String(req.headers['x-teacher-key'] || ''))) {
         return sendJson(res, 403, { error: '教師驗證失效，請重新登入控制台。' });
       }
       const item = { id: crypto.randomUUID(), createdAt: Date.now(), instanceId, data };
@@ -182,4 +184,5 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log(`市場均衡課堂互動已啟動：http://localhost:${PORT}`);
   console.log(`資料檔案：${DATA_FILE}`);
+  if (!TEACHER_PASSWORD) console.warn('⚠️  未設定 TEACHER_PASSWORD，教師控制功能已鎖定。請在 Render → Environment 設定後重新部署。');
 });
